@@ -1,0 +1,5 @@
+Needed assigns:
+
+assign include: amiga/include/c add
+assign lib: portable/include add
+assign include path:to/xpk/includes add

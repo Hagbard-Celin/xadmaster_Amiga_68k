@@ -406,13 +406,13 @@ struct ExecBase *      SysBase       = 0;
 
 #if defined(DEBUG) || defined(DEBUGRESOURCE)
 struct DosLibrary *    DOSBase       = 0;
-struct UtilityBase *   UtilityBase   = 0;
+struct Library *   UtilityBase   = 0;
 struct xadMasterBase * xadMasterBase = 0;
 
 static void MakeGlobalLibs(struct xadMasterBaseP *xadBase)
 {
   DOSBase = xadBase->xmb_DOSBase;
-  UtilityBase = xadBase->xmb_UtilityBase;
+  UtilityBase = (struct Library *) xadBase->xmb_UtilityBase;
   xadMasterBase = (struct xadMasterBase *) xadBase;
 }
 #endif

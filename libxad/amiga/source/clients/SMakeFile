@@ -23,7 +23,7 @@ SCOPTS = RESOPT NOSTACKCHECK STRINGMERGE UNSIGNEDCHARS\
 NOCHECKABORT NOICONS MEMSIZE=HUGE DATA=FARONLY\
 PARAM=REGISTERS DEFINE=__NOLIBBASE__ $(OPT)
 
-ODIR = //obj/clients/
+ODIR = /////Build/Clients/
 HEAD = $(ODIR)extheader.o
 
 SLOPTS = STRIPDEBUG SMALLDATA SMALLCODE NOICONS FROM $(HEAD)
@@ -40,21 +40,25 @@ FARLIB = LIB:scnb.lib
 #
 
 # *************
+DEF: AMPK ar bzip bzip2 CAB COP DiskDoubler DMS \
+     HA id IFF-CDAF LhA LhF LZX MDC MS-TNEF MXM-SimpleArc \
+     PackDev PackDir PackDisk RPM StuffIt Tar TR-DOS \
+     UnrealUMX Wrapster xMash ZAP Zip Zoom
 
 EXTERN: HA TR-DOS
 EXTERN.060: HA.060 TR-DOS.060
 EXTERN.020: HA.020 TR-DOS.020
 
-ALL: Ace AMPK Cpio CrunchDisk DCS DiskDoubler DMS IFF-CDAF FS_Amiga \
+ALL: Ace AMPK Cpio CrunchDisk DCS DImp DiskDoubler DMS IFF-CDAF FS_Amiga \
      FS_FAT FS_SOS HA LhA LhF LZX MDC MXM-SimpleArc \
      PackDev PackDisk StuffIt SuperDuper3 Tar TR-DOS xDisk xMash \
      Zip Zoom
 
 DEPXPK = xadXPK.c
-DEPSPR = xadSPrintF.c
+#DEPSPR = xadSPrintF.c
 DEPINP = xadIO.c xadIO.h
 DEPCON = ConvertE.c
-DEPCPU = xadCPU.h
+#DEPCPU = xadCPU.h
 
 Flush:
 	Tools:AntiVirus/Schutz/VT.Utilities/VTFlush2
@@ -70,23 +74,34 @@ InstallEXTERN: EXTERN.060 Flush
 
 InstallAll: InstallEXTERN InstallOTHERS Install
 
-HA:		HA.000 HA.020 HA.060
+HA:		HA.000 HA.020 HA.030 HA.040 HA.060
 HA.000:		$(ODIR)HA.000
 HA.020:		$(ODIR)HA.020
+HA.030:		$(ODIR)HA.030
+HA.040:		$(ODIR)HA.040
 HA.060:		$(ODIR)HA.060
 
-TR-DOS:		TR-DOS.000 TR-DOS.020 TR-DOS.060
+TR-DOS:		TR-DOS.000 TR-DOS.020 TR-DOS.030 TR-DOS.040 TR-DOS.060
 TR-DOS.000:	$(ODIR)TR-DOS.000
 TR-DOS.020:	$(ODIR)TR-DOS.020
+TR-DOS.030:	$(ODIR)TR-DOS.030
+TR-DOS.040:	$(ODIR)TR-DOS.040
 TR-DOS.060:	$(ODIR)TR-DOS.060
 
 Ace:		$(ODIR)Ace
 AMPK:		$(ODIR)AMPK
+ar:             $(ODIR)ar
+bzip:           $(ODIR)bzip
+bzip2:          $(ODIR)bzip2
+CAB:            $(ODIR)CAB
+COP:            $(ODIR)COP
 Cpio:		$(ODIR)Cpio
 CrunchDisk:	$(ODIR)CrunchDisk
 DCS:		$(ODIR)DCS
+DImp:           $(ODIR)DImp
 DiskDoubler:	$(ODIR)DiskDoubler
 DMS:		$(ODIR)DMS
+id:             $(ODIR)id
 IFF-CDAF:	$(ODIR)IFF-CDAF
 FS_Amiga:	$(ODIR)FS_Amiga
 FS_FAT:		$(ODIR)FS_FAT
@@ -95,14 +110,21 @@ LhA:		$(ODIR)LhA
 LhF:		$(ODIR)LhF
 LZX:		$(ODIR)LZX
 MDC:		$(ODIR)MDC
+MS-TNEF:        $(ODIR)MS-TNEF
+MSA:            $(ODIR)MSA
 MXM-SimpleArc:	$(ODIR)MXM-SimpleArc
 PackDev:	$(ODIR)PackDev
 PackDisk:	$(ODIR)PackDisk
+PackDir:	$(ODIR)PackDir
+RPM:            $(ODIR)RPM
 StuffIt:	$(ODIR)StuffIt
 SuperDuper3:	$(ODIR)SuperDuper3
 Tar:		$(ODIR)Tar
+UnrealUMX:      $(ODIR)UnrealUMX
+Wrapster:       $(ODIR)Wrapster
 xDisk:		$(ODIR)xDisk
 xMash:		$(ODIR)xMash
+ZAP:            $(ODIR)ZAP
 Zip:		$(ODIR)Zip
 Zoom:		$(ODIR)Zoom
 
@@ -126,6 +148,46 @@ $(ODIR)AMPK: $(HEAD) $(ODIR)AMPK.o
 
 $(ODIR)AMPK.o: AMPK.c $(DEPXPK) $(DEPINP) $(DEPCON) xadIO_Compress.c
 	sc $(SCOPTS) AMPK.c OBJNAME=$@
+
+# ************* ar
+
+$(ODIR)ar: $(HEAD) $(ODIR)ar.o
+	slink $(SLOPTS) $(ODIR)ar.o TO $@ LIB $(FARLIB) # $(SDILIB)
+
+$(ODIR)ar.o: ar.c $(DEPCON)
+	sc $(SCOPTS) ar.c OBJNAME=$@
+
+# ************* bzip
+
+$(ODIR)bzip: $(HEAD) $(ODIR)bzip.o
+	slink $(SLOPTS) $(ODIR)bzip.o TO $@ LIB $(FARLIB) # $(SDILIB)
+
+$(ODIR)bzip.o: bzip.c
+	sc $(SCOPTS) bzip.c OBJNAME=$@
+
+# ************* bzip2
+
+$(ODIR)bzip2: $(HEAD) $(ODIR)bzip2.o
+	slink $(SLOPTS) $(ODIR)bzip2.o TO $@ LIB $(FARLIB) # $(SDILIB)
+
+$(ODIR)bzip2.o: bzip2.c # $(DEPCON)
+	sc $(SCOPTS) bzip2.c OBJNAME=$@
+
+# ************* CAB
+
+$(ODIR)CAB: $(HEAD) $(ODIR)CAB.o
+	slink $(SLOPTS) $(ODIR)CAB.o TO $@ LIB $(FARLIB) $(SDILIB)
+
+$(ODIR)CAB.o: CAB.c
+	sc $(SCOPTS) CAB.c OBJNAME=$@
+
+# ************* COP
+
+$(ODIR)COP: $(HEAD) $(ODIR)COP.o
+	slink $(SLOPTS) $(ODIR)COP.o TO $@ LIB $(FARLIB)
+
+$(ODIR)COP.o: COP.c
+	sc $(SCOPTS) COP.c OBJNAME=$@
 
 # ************* Cpio
 
@@ -151,10 +213,18 @@ $(ODIR)DCS: $(HEAD) $(ODIR)DCS.o
 $(ODIR)DCS.o: DCS.c $(DEPCON)
 	sc $(SCOPTS) DCS.c OBJNAME=$@
 
+# ************* DImp
+
+$(XADIR)DImp: $(HEAD) $(ODIR)DImp.o
+	slink $(SLOPTS) $(ODIR)DImp.o TO $@ LIB $(FARLIB)
+
+$(ODIR)DImp.o: DImp.c $(DEPCON)
+	sc $(SCOPTS) DImp.c OBJNAME=$@
+
 # ************* DiskDoubler
 
 $(ODIR)DiskDoubler: $(HEAD) $(ODIR)DiskDoubler.o
-	slink $(SLOPTS) $(ODIR)DiskDoubler.o TO $@ LIB $(SDILIB)
+	slink $(SLOPTS) $(ODIR)DiskDoubler.o TO $@ LIB $(SDILIB) $(FARLIB)
 
 $(ODIR)DiskDoubler.o: DiskDoubler.c $(DEPCON)
 	sc $(SCOPTS) DiskDoubler.c OBJNAME=$@
@@ -166,6 +236,14 @@ $(ODIR)DMS: $(HEAD) $(ODIR)DMS.o
 
 $(ODIR)DMS.o: DMS.c $(DEPCON)
 	sc $(SCOPTS) DMS.c OBJNAME=$@
+
+# ************* id
+
+$(ODIR)id: $(HEAD) $(ODIR)id.o
+	slink $(SLOPTS) $(ODIR)id.o TO $@ LIB $(FARLIB)
+
+$(ODIR)id.o: id.c $(DEPXPK) $(DEPCON)
+	sc $(SCOPTS) id.c OBJNAME=$@
 
 # ************* FS_Amiga
 
@@ -202,7 +280,7 @@ $(ODIR)IFF-CDAF.o: IFF-CDAF.c $(DEPXPK) $(DEPCON)
 # ************* LhA
 
 $(ODIR)LhA: $(HEAD) $(ODIR)LhA.o
-	slink $(SLOPTS) $(ODIR)LhA.o TO $@ LIB $(SDILIB)
+	slink $(SLOPTS) $(ODIR)LhA.o TO $@ LIB $(SDILIB) $(FARLIB)
 
 $(ODIR)LhA.o: LhA.c $(DEPCON) $(DEPINP)
 	sc $(SCOPTS) LhA.c OBJNAME=$@
@@ -223,14 +301,6 @@ $(ODIR)LZX: $(HEAD) $(ODIR)LZX.o
 $(ODIR)LZX.o: LZX.c $(DEPCON) $(DEPCPU)
 	sc $(SCOPTS) LZX.c OBJNAME=$@
 
-# ************* MXM-SimpleArc
-
-$(ODIR)MXM-SimpleArc: $(HEAD) $(ODIR)MXM-SimpleArc.o
-	slink $(SLOPTS) $(ODIR)MXM-SimpleArc.o TO $@ LIB $(SDILIB)
-
-$(ODIR)MXM-SimpleArc.o: MXM-SimpleArc.c
-	sc $(SCOPTS) MXM-SimpleArc.c OBJNAME=$@
-
 # ************* MDC
 
 $(ODIR)MDC: $(HEAD) $(ODIR)MDC.o
@@ -238,6 +308,30 @@ $(ODIR)MDC: $(HEAD) $(ODIR)MDC.o
 
 $(ODIR)MDC.o: MDC.c $(DEPXPK)
 	sc $(SCOPTS) MDC.c OBJNAME=$@
+
+# ************* MS-TNEF
+
+$(ODIR)MS-TNEF: $(HEAD) $(ODIR)MS-TNEF.o
+	slink $(SLOPTS) $(ODIR)MS-TNEF.o TO $@ LIB $(FARLIB)
+
+$(ODIR)MS-TNEF.o: MS-TNEF.c $(DEPCON) #  $(DEPCPU)
+	sc $(SCOPTS) MS-TNEF.c OBJNAME=$@
+
+# ************* MSA
+
+$(ODIR)MSA: $(HEAD) $(ODIR)MSA.o
+	slink $(SLOPTS) $(ODIR)MSA.o TO $@ LIB $(FARLIB)
+
+$(ODIR)MSA.o: MSA.c $(DEPCON) #  $(DEPCPU)
+	sc $(SCOPTS) MSA.c OBJNAME=$@
+
+# ************* MXM-SimpleArc
+
+$(ODIR)MXM-SimpleArc: $(HEAD) $(ODIR)MXM-SimpleArc.o
+	slink $(SLOPTS) $(ODIR)MXM-SimpleArc.o TO $@ LIB $(SDILIB)
+
+$(ODIR)MXM-SimpleArc.o: MXM-SimpleArc.c
+	sc $(SCOPTS) MXM-SimpleArc.c OBJNAME=$@
 
 # ************* PackDev
 
@@ -247,13 +341,29 @@ $(ODIR)PackDev: $(HEAD) $(ODIR)PackDev.o
 $(ODIR)PackDev.o: PackDev.c $(DEPXPK) $(DEPCON)
 	sc $(SCOPTS) PackDev.c OBJNAME=$@
 
+# ************* PackDir
+
+$(ODIR)PackDir: $(HEAD) $(ODIR)PackDir.o
+	slink $(SLOPTS) $(ODIR)PackDir.o TO $@ LIB $(FARLIB) $(SDILIB)
+
+$(ODIR)PackDir.o: PackDir.c $(DEPXPK) $(DEPCON)
+	sc $(SCOPTS) PackDir.c OBJNAME=$@
+
 # ************* PackDisk
 
 $(ODIR)PackDisk: $(HEAD) $(ODIR)PackDisk.o
-	slink $(SLOPTS) $(ODIR)PackDisk.o TO $@
+	slink $(SLOPTS) $(ODIR)PackDisk.o TO $@ LIB $(FARLIB)
 
 $(ODIR)PackDisk.o: PackDisk.c $(DEPXPK) $(DEPCON)
 	sc $(SCOPTS) PackDisk.c OBJNAME=$@
+
+# ************* RPM
+
+$(ODIR)RPM: $(HEAD) $(ODIR)RPM.o
+	slink $(SLOPTS) $(ODIR)RPM.o TO $@ LIB $(FARLIB) $(SDILIB)
+
+$(ODIR)RPM.o: RPM.c $(DEPXPK) $(DEPCON)
+	sc $(SCOPTS) RPM.c OBJNAME=$@
 
 # ************* StuffIt
 
@@ -266,9 +376,9 @@ $(ODIR)StuffIt.o: StuffIt.c $(DEPCON) $(DEPINP) xadCRC_1021.c xadIO_Compress.c
 # ************* SuperDuper3
 
 $(ODIR)SuperDuper3: $(HEAD) $(ODIR)SuperDuper3.o
-	slink $(SLOPTS) $(ODIR)SuperDuper3.o TO $@
+	slink $(SLOPTS) $(ODIR)SuperDuper3.o TO $@ LIB $(SDILIB) $(FARLIB)
 
-$(ODIR)SuperDuper3.o: SuperDuper3.c $(DEPXPK)
+$(ODIR)SuperDuper3.o: SuperDuper3.c $(DEPXPK) $(DEPINP) $(DEPCON) xadIO_Compress.c
 	sc $(SCOPTS) SuperDuper3.c OBJNAME=$@
 
 # ************* Tar
@@ -278,6 +388,22 @@ $(ODIR)Tar: $(HEAD) $(ODIR)Tar.o
 
 $(ODIR)Tar.o: Tar.c
 	sc $(SCOPTS) Tar.c OBJNAME=$@
+
+# ************* UnrealUMX
+
+$(ODIR)UnrealUMX: $(HEAD) $(ODIR)UnrealUMX.o
+	slink $(SLOPTS) $(ODIR)UnrealUMX.o TO $@ LIB $(FARLIB)
+
+$(ODIR)UnrealUMX.o: UnrealUMX.c $(DEPXPK)
+	sc $(SCOPTS) UnrealUMX.c OBJNAME=$@
+
+# ************* Wrapster
+
+$(ODIR)Wrapster: $(HEAD) $(ODIR)Wrapster.o
+	slink $(SLOPTS) $(ODIR)Wrapster.o TO $@ LIB $(FARLIB)
+
+$(ODIR)Wrapster.o: Wrapster.c $(DEPXPK)
+	sc $(SCOPTS) Wrapster.c OBJNAME=$@
 
 # ************* xDisk
 
@@ -295,20 +421,28 @@ $(ODIR)xMash: $(HEAD) $(ODIR)xMash.o
 $(ODIR)xMash.o: xMash.c $(DEPXPK)
 	sc $(SCOPTS) xMash.c OBJNAME=$@
 
+# ************* ZAP
+
+$(ODIR)ZAP: $(HEAD) $(ODIR)ZAP.o
+	slink $(SLOPTS) $(ODIR)ZAP.o TO $@  LIB $(FARLIB)
+
+$(ODIR)ZAP.o: ZAP.c $(DEPXPK)
+	sc $(SCOPTS) ZAP.c OBJNAME=$@
+
 # ************* Zip
 
 $(ODIR)Zip: $(HEAD) $(ODIR)Zip.o
 	slink $(SLOPTS) $(ODIR)Zip.o TO $@ LIB $(FARLIB) $(SDILIB)
 
-$(ODIR)Zip.o: Zip.c $(DEPCON) $(DEPSPR)
+$(ODIR)Zip.o: Zip.c $(DEPCON) # $(DEPSPR)
 	sc $(SCOPTS) Zip.c OBJNAME=$@
 
 # ************* Zoom
 
 $(ODIR)Zoom: $(HEAD) $(ODIR)Zoom.o
-	slink $(SLOPTS) $(ODIR)Zoom.o TO $@ LIB $(FARLIB)
+	slink $(SLOPTS) $(ODIR)Zoom.o TO $@ LIB $(FARLIB) $(SDILIB)
 
-$(ODIR)Zoom.o: Zoom.c $(DEPSPR) xadCRC_1021.c
+$(ODIR)Zoom.o: Zoom.c xadCRC_1021.c
 	sc $(SCOPTS) Zoom.c OBJNAME=$@
 
 
@@ -319,38 +453,62 @@ $(ODIR)Zoom.o: Zoom.c $(DEPSPR) xadCRC_1021.c
 $(ODIR)HA.000: $(HEAD) $(ODIR)HA.000.o
 	slink $(SLOPTS) $(ODIR)HA.000.o TO $@ LIB $(FARLIB)
 
-$(ODIR)HA.000.o: HA.c $(DEPCON) $(DEPCPU)
+$(ODIR)HA.000.o: HA.c $(DEPCON) #$(DEPCPU)
 	sc $(SCOPTS) HA.c OBJNAME=$@
 
 $(ODIR)HA.020: $(HEAD) $(ODIR)HA.020.o
 	slink $(SLOPTS) $(ODIR)HA.020.o TO $@
 
-$(ODIR)HA.020.o: HA.c $(DEPCON) $(DEPCPU)
+$(ODIR)HA.020.o: HA.c $(DEPCON) #$(DEPCPU)
 	sc $(SCOPTS) HA.c OBJNAME=$@ CPU=68020
+
+$(ODIR)HA.030: $(HEAD) $(ODIR)HA.030.o
+	slink $(SLOPTS) $(ODIR)HA.030.o TO $@
+
+$(ODIR)HA.030.o: HA.c $(DEPCON) #$(DEPCPU)
+	sc $(SCOPTS) HA.c OBJNAME=$@ CPU=68030
+
+$(ODIR)HA.040: $(HEAD) $(ODIR)HA.040.o
+	slink $(SLOPTS) $(ODIR)HA.040.o TO $@
+
+$(ODIR)HA.040.o: HA.c $(DEPCON) #$(DEPCPU)
+	sc $(SCOPTS) HA.c OBJNAME=$@ CPU=68040
 
 $(ODIR)HA.060: $(HEAD) $(ODIR)HA.060.o
 	slink $(SLOPTS) $(ODIR)HA.060.o TO $@
 
-$(ODIR)HA.060.o: HA.c $(DEPCON) $(DEPCPU)
+$(ODIR)HA.060.o: HA.c $(DEPCON) #$(DEPCPU)
 	sc $(SCOPTS) HA.c OBJNAME=$@ CPU=68060
 
 # ************* TR-DOS
 
 $(ODIR)TR-DOS.000: $(HEAD) $(ODIR)TR-DOS.000.o
-	slink $(SLOPTS) $(ODIR)TR-DOS.000.o TO $@
+	slink $(SLOPTS) $(ODIR)TR-DOS.000.o TO $@ LIB $(SDILIB) $(FARLIB)
 
-$(ODIR)TR-DOS.000.o: TR-DOS.c $(DEPCON) $(DEPCPU) $(DEPSPR)
+$(ODIR)TR-DOS.000.o: TR-DOS.c $(DEPCON) #$(DEPCPU) $(DEPSPR)
 	sc $(SCOPTS) TR-DOS.c OBJNAME=$@
 
 $(ODIR)TR-DOS.020: $(HEAD) $(ODIR)TR-DOS.020.o
-	slink $(SLOPTS) $(ODIR)TR-DOS.020.o TO $@
+	slink $(SLOPTS) $(ODIR)TR-DOS.020.o TO $@ LIB $(SDILIB) $(FARLIB)
 
-$(ODIR)TR-DOS.020.o: TR-DOS.c $(DEPCON) $(DEPCPU) $(DEPSPR)
+$(ODIR)TR-DOS.020.o: TR-DOS.c $(DEPCON) #$(DEPCPU) $(DEPSPR)
 	sc $(SCOPTS) TR-DOS.c OBJNAME=$@ CPU=68020
 
-$(ODIR)TR-DOS.060: $(HEAD) $(ODIR)TR-DOS.060.o
-	slink $(SLOPTS) $(ODIR)TR-DOS.060.o TO $@
+$(ODIR)TR-DOS.030: $(HEAD) $(ODIR)TR-DOS.030.o
+	slink $(SLOPTS) $(ODIR)TR-DOS.030.o TO $@ LIB $(SDILIB) $(FARLIB)
 
-$(ODIR)TR-DOS.060.o: TR-DOS.c $(DEPCON) $(DEPCPU) $(DEPSPR)
+$(ODIR)TR-DOS.030.o: TR-DOS.c $(DEPCON) #$(DEPCPU) $(DEPSPR)
+	sc $(SCOPTS) TR-DOS.c OBJNAME=$@ CPU=68030
+
+$(ODIR)TR-DOS.040: $(HEAD) $(ODIR)TR-DOS.040.o
+	slink $(SLOPTS) $(ODIR)TR-DOS.040.o TO $@ LIB $(SDILIB) $(FARLIB)
+
+$(ODIR)TR-DOS.040.o: TR-DOS.c $(DEPCON) #$(DEPCPU) $(DEPSPR)
+	sc $(SCOPTS) TR-DOS.c OBJNAME=$@ CPU=68040
+
+$(ODIR)TR-DOS.060: $(HEAD) $(ODIR)TR-DOS.060.o
+	slink $(SLOPTS) $(ODIR)TR-DOS.060.o TO $@ LIB $(SDILIB) $(FARLIB)
+
+$(ODIR)TR-DOS.060.o: TR-DOS.c $(DEPCON) #$(DEPCPU) $(DEPSPR)
 	sc $(SCOPTS) TR-DOS.c OBJNAME=$@ CPU=68060
 

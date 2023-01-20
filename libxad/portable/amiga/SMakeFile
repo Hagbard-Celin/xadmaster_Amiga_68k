@@ -18,7 +18,7 @@
 #   License along with this library; if not, write to the Free Software
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-ODIR = T:
+ODIR = CODE:XadLib/Build/Library/
 CDIR = /clients/
 IDIR = /include/
 LDIR = /
@@ -47,35 +47,15 @@ HFILES   = \
 	$(IDIR)xadmaster.h
 
 CFILES = \
-        $(CDIR)HA.c \
-        $(CDIR)TR-DOS.c \
 	$(CDIR)Ace.c \
-	$(CDIR)AMPK.c \
-	$(CDIR)bzip2.c \
-	$(CDIR)CAB.c \
 	$(CDIR)Cpio.c \
 	$(CDIR)CrunchDisk.c \
-	$(CDIR)DMS.c \
 	$(CDIR)DCS.c \
-	$(CDIR)IFF-CDAF.c \
 	$(CDIR)FS_Amiga.c \
-        $(CDIR)FS_FAT.c \
-        $(CDIR)FS_SOS.c \
-        $(CDIR)LhA.c \
-	$(CDIR)LhF.c \
-	$(CDIR)LZX.c \
-	$(CDIR)MDC.c \
-	$(CDIR)MXM-SimpleArc.c \
-	$(CDIR)PackDev.c \
-	$(CDIR)PackDisk.c \
-	$(CDIR)RPM.c \
-	$(CDIR)StuffIt.c \
-	$(CDIR)SuperDuper3.c \
-	$(CDIR)Tar.c \
-	$(CDIR)xDisk.c \
-	$(CDIR)xMash.c \
-	$(CDIR)Zip.c \
-	$(CDIR)Zoom.c \
+    $(CDIR)FS_FAT.c \
+    $(CDIR)FS_SOS.c \
+    $(CDIR)SuperDuper3.c \
+    $(CDIR)xDisk.c \
 	$(CDIR)xadIO_Compress.c \
 	$(CDIR)xadIO_XPK.c \
 	$(CDIR)xadIO.h \
@@ -134,7 +114,8 @@ DEBOBJ = \
 	$(DEBODIR)objects.o \
 	$(DEBODIR)protection.o
 
-DEF: Install DEBUG
+#DEF: Install DEBUG
+DEF: 030 DEBUG
 CPU: 000 020 030 040 060
 RES: 060RES
 ALL: CPU DEBUG
@@ -150,6 +131,9 @@ Install: 060 Flush
 
 Install040: 040 Flush
 	Copy $(ODIR)xadmaster.library040 LIBS:xadmaster.library
+
+Install030: 030 Flush
+    Copy $(ODIR)xadmaster.library030 LIBS:xadmaster.library
 
 Install020: 020 Flush
 	Copy $(ODIR)xadmaster.library020 LIBS:xadmaster.library

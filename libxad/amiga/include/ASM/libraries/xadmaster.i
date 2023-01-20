@@ -55,13 +55,11 @@ TAG_SIZ			EQU	TAG_USER
 *************************************************************************
 
 	STRUCTURE xadMasterBase,LIB_SIZE
-	IFD	XAD_OBSOLETE
 	APTR	xmb_SysBase
 	APTR	xmb_DOSBase
 	APTR	xmb_UtilityBase
 	ULONG	xmb_RecogSize		* read only
 	APTR	xmb_DefaultName 	* name for XADFIF_NOFILENAME (V6)
-	ENDC
 
 *************************************************************************
 *									*

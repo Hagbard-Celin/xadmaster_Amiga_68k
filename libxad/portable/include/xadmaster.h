@@ -1,7 +1,7 @@
 #ifndef LIBRARIES_XADMASTER_H
 #define LIBRARIES_XADMASTER_H
 
-/*  $Id: xadmaster.h,v 13.6 2005/06/23 15:47:23 stoecker Exp $
+/*  $Id: xadmaster.h.in,v 1.26 2006/06/21 07:18:12 stoecker Exp $
     xadmaster.library defines and structures
 
     XAD library system for archive handling
@@ -26,6 +26,44 @@
 extern "C" {
 #endif
 
+#ifdef HAVE_STDINT_H
+#include <stdint.h>
+typedef uint32_t           xadUINT32;
+typedef int32_t            xadINT32;
+typedef uint16_t           xadUINT16;
+typedef int16_t            xadINT16;
+typedef uint8_t            xadUINT8;
+typedef int8_t             xadINT8;
+typedef uint32_t           xadSize;
+typedef int32_t            xadSignSize;
+#define XADSIZE            "ld"
+#define XADSSIZE           "lu"
+#else
+typedef unsigned long      xadUINT32;
+typedef signed long        xadINT32;
+typedef unsigned short     xadUINT16;
+typedef signed short       xadINT16;
+typedef unsigned char      xadUINT8;
+typedef signed char        xadINT8;
+typedef xadUINT32          xadSize;
+typedef xadINT32           xadSignSize;
+#define XADSIZE            "ld"
+#define XADSSIZE           "lu"
+#endif
+typedef void *             xadPTR;
+typedef char               xadSTRING;
+typedef xadSTRING *        xadSTRPTR;
+typedef unsigned int       xadUINT;
+typedef int                xadINT;
+typedef xadINT32           xadERROR;
+typedef xadINT16           xadBOOL;
+
+#define XADFALSE        0
+#define XADTRUE         1
+#define XADMEMF_ANY     (0)
+#define XADMEMF_CLEAR   (1L << 16)
+#define XADMEMF_PUBLIC  (1L << 0)
+
 #ifndef DOS_DOS_H
 #include <dos/dos.h>
 #endif
@@ -40,46 +78,14 @@ extern "C" {
 
 #define XADNAME  "xadmaster.library"
 
+/* portability defines */
 #define XADM
-
-#ifdef HAVE_STDINT_H
-#include <stdint.h>
-typedef uint32_t           xadUINT32;
-typedef int32_t            xadINT32;
-typedef uint16_t           xadUINT16;
-typedef int16_t            xadINT16;
-typedef uint8_t            xadUINT8;
-typedef int8_t             xadINT8;
-typedef uint32_t           xadSize;
-typedef int32_t            xadSignSize;
-#else
-typedef unsigned long      xadUINT32;
-typedef signed long        xadINT32;
-typedef unsigned short     xadUINT16;
-typedef signed short       xadINT16;
-typedef unsigned char      xadUINT8;
-typedef signed char        xadINT8;
-typedef xadUINT32          xadSize;
-typedef xadINT32           xadSignSize;
-#endif
-typedef void *             xadPTR;
-typedef char               xadSTRING;
-typedef xadSTRING *        xadSTRPTR;
-typedef unsigned int       xadUINT;
-typedef int                xadINT;
-typedef xadINT32           xadERROR;
-typedef xadINT16           xadBOOL;
 
 typedef BPTR             xadFileHandle;
 typedef Tag              xadTag;
 typedef struct TagItem * xadTAGPTR;
 
-#define XADFALSE        0
-#define XADTRUE         1
-#define XADMEMF_ANY     (0)
-#define XADMEMF_CLEAR   (1L << 16)
-#define XADMEMF_PUBLIC  (1L << 0)
-
+/* on the Amiga, pointer size == int size == 32 bits */
 #define TAG_PTR TAG_USER
 #define TAG_INT TAG_USER
 #define TAG_SIZ TAG_USER
@@ -109,129 +115,129 @@ struct xadMasterBase {
 ************************************************************************/
 
 /* input tags for xadGetInfo, only one can be specified per call */
-#define XAD_INSIZE              (TAG_USER+  1) /* input data size */
-#define XAD_INFILENAME          (TAG_USER+  2)
-#define XAD_INFILEHANDLE        (TAG_USER+  3)
-#define XAD_INMEMORY            (TAG_USER+  4)
-#define XAD_INHOOK              (TAG_USER+  5)
-#define XAD_INSPLITTED          (TAG_USER+  6) /* (V2) */
-#define XAD_INDISKARCHIVE       (TAG_USER+  7) /* (V4) */
-#define XAD_INXADSTREAM         (TAG_USER+  8) /* (V8) */
-#define XAD_INDEVICE            (TAG_USER+  9) /* (V11) */
+#define XAD_INSIZE              (TAG_SIZ+  1) /* input data size */
+#define XAD_INFILENAME          (TAG_PTR+  2)
+#define XAD_INFILEHANDLE        (TAG_PTR+  3)
+#define XAD_INMEMORY            (TAG_PTR+  4)
+#define XAD_INHOOK              (TAG_PTR+  5)
+#define XAD_INSPLITTED          (TAG_PTR+  6) /* (V2) */
+#define XAD_INDISKARCHIVE       (TAG_PTR+  7) /* (V4) */
+#define XAD_INXADSTREAM         (TAG_PTR+  8) /* (V8) */
+#define XAD_INDEVICE            (TAG_PTR+  9) /* (V11) */
 
 /* output tags, only one can be specified per call, xadXXXXUnArc */
-#define XAD_OUTSIZE             (TAG_USER+ 10) /* output data size */
-#define XAD_OUTFILENAME         (TAG_USER+ 11)
-#define XAD_OUTFILEHANDLE       (TAG_USER+ 12)
-#define XAD_OUTMEMORY           (TAG_USER+ 13)
-#define XAD_OUTHOOK             (TAG_USER+ 14)
-#define XAD_OUTDEVICE           (TAG_USER+ 15)
-#define XAD_OUTXADSTREAM        (TAG_USER+ 16) /* (V8) */
+#define XAD_OUTSIZE             (TAG_SIZ+ 10) /* output data size */
+#define XAD_OUTFILENAME         (TAG_PTR+ 11)
+#define XAD_OUTFILEHANDLE       (TAG_PTR+ 12)
+#define XAD_OUTMEMORY           (TAG_PTR+ 13)
+#define XAD_OUTHOOK             (TAG_PTR+ 14)
+#define XAD_OUTDEVICE           (TAG_PTR+ 15)
+#define XAD_OUTXADSTREAM        (TAG_PTR+ 16) /* (V8) */
 
 /* object allocation tags for xadAllocObjectA */
-#define XAD_OBJNAMESIZE         (TAG_USER+ 20) /* XADOBJ_FILEINFO, size of needed name space */
-#define XAD_OBJCOMMENTSIZE      (TAG_USER+ 21) /* XADOBJ_FILEINFO, size of needed comment space */
-#define XAD_OBJPRIVINFOSIZE     (TAG_USER+ 22) /* XADOBJ_FILEINFO & XADOBJ_DISKINFO, self use size */
-#define XAD_OBJBLOCKENTRIES     (TAG_USER+ 23) /* XADOBJ_DISKINFO, number of needed entries */
+#define XAD_OBJNAMESIZE         (TAG_INT+ 20) /* XADOBJ_FILEINFO, size of needed name space */
+#define XAD_OBJCOMMENTSIZE      (TAG_INT+ 21) /* XADOBJ_FILEINFO, size of needed comment space */
+#define XAD_OBJPRIVINFOSIZE     (TAG_INT+ 22) /* XADOBJ_FILEINFO & XADOBJ_DISKINFO, self use size */
+#define XAD_OBJBLOCKENTRIES     (TAG_INT+ 23) /* XADOBJ_DISKINFO, number of needed entries */
 
 /* tags for xadGetInfo, xadFileUnArc and xadDiskUnArc */
-#define XAD_NOEXTERN            (TAG_USER+ 50) /* do not use extern clients */
-#define XAD_PASSWORD            (TAG_USER+ 51) /* password when needed */
-#define XAD_ENTRYNUMBER         (TAG_USER+ 52) /* number of wanted entry */
-#define XAD_PROGRESSHOOK        (TAG_USER+ 53) /* the progress hook */
-#define XAD_OVERWRITE           (TAG_USER+ 54) /* overwrite file ? */
-#define XAD_MAKEDIRECTORY       (TAG_USER+ 55) /* create directory tree */
-#define XAD_IGNOREGEOMETRY      (TAG_USER+ 56) /* ignore drive geometry ? */
-#define XAD_LOWCYLINDER         (TAG_USER+ 57) /* lowest cylinder */
-#define XAD_HIGHCYLINDER        (TAG_USER+ 58) /* highest cylinder */
-#define XAD_VERIFY              (TAG_USER+ 59) /* verify for disk hook */
-#define XAD_NOKILLPARTIAL       (TAG_USER+ 60) /* do not delete partial/corrupt files (V3.3) */
-#define XAD_FORMAT              (TAG_USER+ 61) /* format output device (V5) */
-#define XAD_USESECTORLABELS     (TAG_USER+ 62) /* sector labels are stored on disk (V9) */
-#define XAD_IGNOREFLAGS         (TAG_USER+ 63) /* ignore the client, if certain flags are set (V11) */
-#define XAD_ONLYFLAGS           (TAG_USER+ 64) /* ignore the client, if certain flags are NOT set (V11) */
+#define XAD_NOEXTERN            (TAG_INT+ 50) /* do not use extern clients */
+#define XAD_PASSWORD            (TAG_PTR+ 51) /* password when needed */
+#define XAD_ENTRYNUMBER         (TAG_INT+ 52) /* number of wanted entry */
+#define XAD_PROGRESSHOOK        (TAG_PTR+ 53) /* the progress hook */
+#define XAD_OVERWRITE           (TAG_INT+ 54) /* overwrite file ? */
+#define XAD_MAKEDIRECTORY       (TAG_INT+ 55) /* create directory tree */
+#define XAD_IGNOREGEOMETRY      (TAG_INT+ 56) /* ignore drive geometry ? */
+#define XAD_LOWCYLINDER         (TAG_INT+ 57) /* lowest cylinder */
+#define XAD_HIGHCYLINDER        (TAG_INT+ 58) /* highest cylinder */
+#define XAD_VERIFY              (TAG_INT+ 59) /* verify for disk hook */
+#define XAD_NOKILLPARTIAL       (TAG_INT+ 60) /* do not delete partial/corrupt files (V3.3) */
+#define XAD_FORMAT              (TAG_INT+ 61) /* format output device (V5) */
+#define XAD_USESECTORLABELS     (TAG_INT+ 62) /* sector labels are stored on disk (V9) */
+#define XAD_IGNOREFLAGS         (TAG_INT+ 63) /* ignore the client, if certain flags are set (V11) */
+#define XAD_ONLYFLAGS           (TAG_INT+ 64) /* ignore the client, if certain flags are NOT set (V11) */
 
 /* input tags for xadConvertDates, only one can be passed */
-#define XAD_DATEUNIX            (TAG_USER+ 70) /* unix date variable */
-#define XAD_DATEAMIGA           (TAG_USER+ 71) /* Amiga date variable */
-#define XAD_DATEDATESTAMP       (TAG_USER+ 72) /* Amiga struct DateStamp */
-#define XAD_DATEXADDATE         (TAG_USER+ 73) /* struct xadDate */
-#define XAD_DATECLOCKDATA       (TAG_USER+ 74) /* Amiga struct ClockData */
-#define XAD_DATECURRENTTIME     (TAG_USER+ 75) /* input is system time */
-#define XAD_DATEMSDOS           (TAG_USER+ 76) /* MS-DOS packed format (V2) */
-#define XAD_DATEMAC             (TAG_USER+ 77) /* Mac date variable (V8) */
-#define XAD_DATECPM             (TAG_USER+ 78) /* CP/M data structure (V10) */
-#define XAD_DATECPM2            (TAG_USER+ 79) /* CP/M data structure type 2 (V10) */
-#define XAD_DATEISO9660         (TAG_USER+300) /* ISO9660 date structure (V11) */
+#define XAD_DATEUNIX            (TAG_INT+ 70) /* unix date variable */
+#define XAD_DATEAMIGA           (TAG_INT+ 71) /* Amiga date variable */
+#define XAD_DATEDATESTAMP       (TAG_PTR+ 72) /* Amiga struct DateStamp */
+#define XAD_DATEXADDATE         (TAG_PTR+ 73) /* struct xadDate */
+#define XAD_DATECLOCKDATA       (TAG_PTR+ 74) /* Amiga struct ClockData */
+#define XAD_DATECURRENTTIME     (TAG_INT+ 75) /* input is system time */
+#define XAD_DATEMSDOS           (TAG_INT+ 76) /* MS-DOS packed format (V2) */
+#define XAD_DATEMAC             (TAG_INT+ 77) /* Mac date variable (V8) */
+#define XAD_DATECPM             (TAG_PTR+ 78) /* CP/M data structure (V10) */
+#define XAD_DATECPM2            (TAG_INT+ 79) /* CP/M data structure type 2 (V10) */
+#define XAD_DATEISO9660         (TAG_PTR+300) /* ISO9660 date structure (V11) */
 
 /* output tags, there can be specified multiple tags for one call */
-#define XAD_GETDATEUNIX         (TAG_USER+ 80) /* unix date variable */
-#define XAD_GETDATEAMIGA        (TAG_USER+ 81) /* Amiga date variable */
-#define XAD_GETDATEDATESTAMP    (TAG_USER+ 82) /* Amiga struct DateStamp */
-#define XAD_GETDATEXADDATE      (TAG_USER+ 83) /* struct xadDate */
-#define XAD_GETDATECLOCKDATA    (TAG_USER+ 84) /* Amiga struct ClockData */
-#define XAD_GETDATEMSDOS        (TAG_USER+ 86) /* MS-DOS packed format (V2) */
-#define XAD_GETDATEMAC          (TAG_USER+ 87) /* Mac date variable (V8) */
-#define XAD_GETDATECPM          (TAG_USER+ 88) /* CP/M data structure (V10) */
-#define XAD_GETDATECPM2         (TAG_USER+ 89) /* CP/M data structure type 2 (V10) */
-#define XAD_GETDATEISO9660      (TAG_USER+320) /* ISO9660 date structure (V11) */
+#define XAD_GETDATEUNIX         (TAG_PTR+ 80) /* unix date variable */
+#define XAD_GETDATEAMIGA        (TAG_PTR+ 81) /* Amiga date variable */
+#define XAD_GETDATEDATESTAMP    (TAG_PTR+ 82) /* Amiga struct DateStamp */
+#define XAD_GETDATEXADDATE      (TAG_PTR+ 83) /* struct xadDate */
+#define XAD_GETDATECLOCKDATA    (TAG_PTR+ 84) /* Amiga struct ClockData */
+#define XAD_GETDATEMSDOS        (TAG_PTR+ 86) /* MS-DOS packed format (V2) */
+#define XAD_GETDATEMAC          (TAG_PTR+ 87) /* Mac date variable (V8) */
+#define XAD_GETDATECPM          (TAG_PTR+ 88) /* CP/M data structure (V10) */
+#define XAD_GETDATECPM2         (TAG_PTR+ 89) /* CP/M data structure type 2 (V10) */
+#define XAD_GETDATEISO9660      (TAG_PTR+320) /* ISO9660 date structure (V11) */
 
 /* following tags need locale.library to be installed on Amiga */
-#define XAD_MAKEGMTDATE         (TAG_USER+ 90) /* make local to GMT time */
-#define XAD_MAKELOCALDATE       (TAG_USER+ 91) /* make GMT to local time */
+#define XAD_MAKEGMTDATE         (TAG_INT+ 90) /* make local to GMT time */
+#define XAD_MAKELOCALDATE       (TAG_INT+ 91) /* make GMT to local time */
 
 /* tags for xadHookTagAccess (V3) */
-#define XAD_USESKIPINFO         (TAG_USER+104) /* the hook uses xadSkipInfo (V3) */
-#define XAD_SECTORLABELS        (TAG_USER+105) /* pass sector labels with XADAC_WRITE (V9) */
+#define XAD_USESKIPINFO         (TAG_INT+104) /* the hook uses xadSkipInfo (V3) */
+#define XAD_SECTORLABELS        (TAG_PTR+105) /* pass sector labels with XADAC_WRITE (V9) */
 
-#define XAD_GETCRC16            (TAG_USER+120) /* pointer to xadUINT16 value (V3) */
-#define XAD_GETCRC32            (TAG_USER+121) /* pointer to xadUINT32 value (V3) */
+#define XAD_GETCRC16            (TAG_PTR+120) /* pointer to xadUINT16 value (V3) */
+#define XAD_GETCRC32            (TAG_PTR+121) /* pointer to xadUINT32 value (V3) */
 
-#define XAD_CRC16ID             (TAG_USER+130) /* ID for crc calculation (V3) */
-#define XAD_CRC32ID             (TAG_USER+131) /* ID for crc calculation (V3) */
+#define XAD_CRC16ID             (TAG_INT+130) /* ID for crc calculation (V3) */
+#define XAD_CRC32ID             (TAG_INT+131) /* ID for crc calculation (V3) */
 
 /* tags for xadConvertProtection (V4) */
-#define XAD_PROTAMIGA           (TAG_USER+160) /* Amiga type protection bits (V4) */
-#define XAD_PROTUNIX            (TAG_USER+161) /* protection bits in UNIX mode (V4) */
-#define XAD_PROTMSDOS           (TAG_USER+162) /* MSDOS type protection bits (V4) */
-#define XAD_PROTFILEINFO        (TAG_USER+163) /* input is a xadFileInfo structure (V11) */
+#define XAD_PROTAMIGA           (TAG_INT+160) /* Amiga type protection bits (V4) */
+#define XAD_PROTUNIX            (TAG_INT+161) /* protection bits in UNIX mode (V4) */
+#define XAD_PROTMSDOS           (TAG_INT+162) /* MSDOS type protection bits (V4) */
+#define XAD_PROTFILEINFO        (TAG_PTR+163) /* input is a xadFileInfo structure (V11) */
 
-#define XAD_GETPROTAMIGA        (TAG_USER+170) /* return Amiga protection bits (V4) */
-#define XAD_GETPROTUNIX         (TAG_USER+171) /* return UNIX protection bits (V11) */
-#define XAD_GETPROTMSDOS        (TAG_USER+172) /* return MSDOS protection bits (V11) */
-#define XAD_GETPROTFILEINFO     (TAG_USER+173) /* fill xadFileInfo protection fields (V11) */
+#define XAD_GETPROTAMIGA        (TAG_PTR+170) /* return Amiga protection bits (V4) */
+#define XAD_GETPROTUNIX         (TAG_PTR+171) /* return UNIX protection bits (V11) */
+#define XAD_GETPROTMSDOS        (TAG_PTR+172) /* return MSDOS protection bits (V11) */
+#define XAD_GETPROTFILEINFO     (TAG_PTR+173) /* fill xadFileInfo protection fields (V11) */
 
 /* tags for xadGetDiskInfo (V7) */
-#define XAD_STARTCLIENT         (TAG_USER+180) /* the client to start with (V7) */
-#define XAD_NOEMPTYERROR        (TAG_USER+181) /* do not create XADERR_EMPTY (V8) */
+#define XAD_STARTCLIENT         (TAG_PTR+180) /* the client to start with (V7) */
+#define XAD_NOEMPTYERROR        (TAG_INT+181) /* do not create XADERR_EMPTY (V8) */
 
 /* tags for xadFreeHookAccess (V8) */
-#define XAD_WASERROR            (TAG_USER+190) /* error occured, call abort method (V8) */
+#define XAD_WASERROR            (TAG_INT+190) /* error occured, call abort method (V8) */
 
 /* tags for miscellaneous stuff */
-#define XAD_ARCHIVEINFO         (TAG_USER+200) /* xadArchiveInfo for stream hooks (V8) */
-#define XAD_ERRORCODE           (TAG_USER+201) /* error code of function (V12) */
-#define XAD_EXTENSION           (TAG_USER+202) /* argument for xadGetDefaultName() (V13) */
+#define XAD_ARCHIVEINFO         (TAG_PTR+200) /* xadArchiveInfo for stream hooks (V8) */
+#define XAD_ERRORCODE           (TAG_PTR+201) /* error code of function (V12) */
+#define XAD_EXTENSION           (TAG_PTR+202) /* argument for xadGetDefaultName() (V13) */
 
 /* tags for xadAddFileEntry and xadAddDiskEntry (V10) */
-#define XAD_SETINPOS            (TAG_USER+240) /* set xai_InPos after call (V10) */
-#define XAD_INSERTDIRSFIRST     (TAG_USER+241) /* insert dirs at list start (V10) */
+#define XAD_SETINPOS            (TAG_SIZ+240) /* set xai_InPos after call (V10) */
+#define XAD_INSERTDIRSFIRST     (TAG_INT+241) /* insert dirs at list start (V10) */
 
 /* tags for xadConvertName (V12) */
-#define XAD_PATHSEPERATOR       (TAG_USER+260) /* xadUINT16 *, default is {'/','\\',0} in source charset (V12) */
-#define XAD_CHARACTERSET        (TAG_USER+261) /* the characterset of string (V12) */
-#define XAD_STRINGSIZE          (TAG_USER+262) /* maximum size of following (V12) */
-#define XAD_CSTRING             (TAG_USER+263) /* zero-terminated string (V12) */
-#define XAD_PSTRING             (TAG_USER+264) /* lengthed Pascal string (V12) */
-#define XAD_XADSTRING           (TAG_USER+265) /* an xad string (V12) */
-#define XAD_ADDPATHSEPERATOR    (TAG_USER+266) /* default is TRUE (V12) */
+#define XAD_PATHSEPERATOR       (TAG_PTR+260) /* xadUINT16 *, default is {'/','\\',0} in source charset (V12) */
+#define XAD_CHARACTERSET        (TAG_INT+261) /* the characterset of string (V12) */
+#define XAD_STRINGSIZE          (TAG_INT+262) /* maximum size of following (V12) */
+#define XAD_CSTRING             (TAG_PTR+263) /* zero-terminated string (V12) */
+#define XAD_PSTRING             (TAG_PTR+264) /* lengthed Pascal string (V12) */
+#define XAD_XADSTRING           (TAG_PTR+265) /* an xad string (V12) */
+#define XAD_ADDPATHSEPERATOR    (TAG_INT+266) /* default is TRUE (V12) */
 
 /* tags for xadGetFilename (V12) */
-#define XAD_NOLEADINGPATH       (TAG_USER+280) /* default is FALSE (V12) */
-#define XAD_NOTRAILINGPATH      (TAG_USER+281) /* default is FALSE (V12) */
-#define XAD_MASKCHARACTERS      (TAG_USER+282) /* default are #?()[]~%*:|",1-31,127-160 (V12) */
-#define XAD_MASKINGCHAR         (TAG_USER+283) /* default is '_' (V12) */
-#define XAD_REQUIREDBUFFERSIZE  (TAG_USER+284) /* pointer which should hold buf size (V12) */
+#define XAD_NOLEADINGPATH       (TAG_INT+280) /* default is FALSE (V12) */
+#define XAD_NOTRAILINGPATH      (TAG_INT+281) /* default is FALSE (V12) */
+#define XAD_MASKCHARACTERS      (TAG_PTR+282) /* default are #?()[]~%*:|",1-31,127-160 (V12) */
+#define XAD_MASKINGCHAR         (TAG_INT+283) /* default is '_' (V12) */
+#define XAD_REQUIREDBUFFERSIZE  (TAG_PTR+284) /* pointer which should hold buf size (V12) */
 
 /* Places 300-339 used for dates! */
 
@@ -479,6 +485,7 @@ struct xadFileInfo {
 #define XADSPECIALTYPE_UNIXDEVICE    1 /* xadSpecial entry is xadSpecialUnixDevice */
 #define XADSPECIALTYPE_AMIGAADDRESS  2 /* xadSpecial entry is xadSpecialAmigaAddress */
 #define XADSPECIALTYPE_CBM8BIT       3 /* xadSpecial entry is xadSpecialCBM8bit */
+#define XADSPECIALTYPE_MACOS         4 /* xadSpecial entry is xadSpecialMacOS */
 
 struct xadSpecialUnixDevice
 {
@@ -497,6 +504,14 @@ struct xadSpecialCBM8bit
   xadUINT8 xfis_FileType;        /* File type XADCBM8BITTYPE_xxx */
   xadUINT8 xfis_RecordLength;    /* record length if relative file */
 };
+
+struct xadSpecialMacOS
+{
+  xadUINT32 Type;
+  xadUINT32 Creator;
+  xadUINT16 FinderFlags;
+};
+
 #define XADCBM8BITTYPE_UNKNOWN  0x00    /*        Unknown / Unused */
 #define XADCBM8BITTYPE_BASIC    0x01    /* Tape - BASIC program file */
 #define XADCBM8BITTYPE_DATA     0x02    /* Tape - Data block (SEQ file) */
@@ -517,6 +532,7 @@ struct xadSpecial
     struct xadSpecialUnixDevice   xfis_UnixDevice;
     struct xadSpecialAmigaAddress xfis_AmigaAddress;
     struct xadSpecialCBM8bit      xfis_CBM8bit;
+    struct xadSpecialMacOS        xfis_MacOS;
   } xfis_Data;
 };
 
@@ -806,8 +822,8 @@ struct xadForeman {
   xadUINT32          xfm_ID;          /* must be XADFOREMAN_ID */
   xadUINT16          xfm_Version;     /* set to XADFOREMAN_VERSION */
   xadUINT16          xfm_Reserved;
-  xadSTRPTR          xfm_VersString;  /* pointer to $VER: string */
-  struct xadClient * xfm_FirstClient; /* pointer to first client */
+  const xadSTRING *  xfm_VersString;  /* pointer to $VER: string */
+  const struct xadClient * xfm_FirstClient; /* pointer to first client */
 };
 
 #define XADFOREMAN_SECURITY     0x70FF4E75 /* MOVEQ #-1,D0 and RTS */
@@ -830,8 +846,19 @@ struct xadClient {
   void            (* xc_Free)();
 };
 
-/* function interface
-ASM(xadBOOL) xc_RecogData(REG(d0, xadSize size), REG(a0, xadUINT8 *data),
+/* function interface (AmigaOS4 PPC)
+xadBOOL         (* xc_RecogData)(xadSize size, const xadUINT8 *data,
+                  struct xadMasterIFace *IxadMaster);
+xadERROR        (* xc_GetInfo)(struct xadArchiveInfo *ai,
+                  struct xadMasterIFace *IxadMaster);
+xadERROR        (* xc_UnArchive)(struct xadArchiveInfo *ai,
+                  struct xadMasterIFace *IxadMaster);
+void            (* xc_Free)(struct xadArchiveInfo *ai,
+                  struct xadMasterIFace *IxadMaster);
+*/
+
+/* function interface (Amiga 68k)
+ASM(xadBOOL) xc_RecogData(REG(d0, xadSize size), REG(a0, const xadUINT8 *data),
                 REG(a6, struct xadMasterBase *xadMasterBase));
 ASM(xadERROR) xc_GetInfo(REG(a0, struct xadArchiveInfo *ai),
                 REG(a6, struct xadMasterBase *xadMasterBase));
@@ -840,7 +867,6 @@ ASM(xadERROR) xc_UnArchive(REG(a0, struct xadArchiveInfo *ai),
 ASM(void) xc_Free(REG(a0, struct xadArchiveInfo *ai),
                 REG(a6, struct xadMasterBase *xadMasterBase));
 */
-
 /* xc_RecogData returns 1 when recognized and 0 when not, all the others
    return 0 when ok and XADERR values on error. xc_Free has no return
    value.
