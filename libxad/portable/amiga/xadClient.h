@@ -77,7 +77,7 @@ The string CPUTEXT is used in version string after date.
           REG(a6, struct xadMasterBase *xadMasterBase)) \
           { CPUCHECK return _name##_RecogData(size,data,xadMasterBase); } \
           INLINE xadBOOL _name##_RecogData( xadSize size, \
-          xadUINT8 *data, struct xadMasterBase *xadMasterBase)
+          const xadUINT8 *data, struct xadMasterBase *xadMasterBase)
 #else
 #define XADRECOGDATA(name) static ASM(xadBOOL) name##_RecogData( \
           REG(d0, xadSize size), \
