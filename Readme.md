@@ -5,9 +5,11 @@ And my only criteria for success is that it compiles/runs, and does not fill my 
 Except making most clients external, to avoid the main library getting un-practically big(in my opinion) for m68k,
 the only changes I've done are the absolute minimum required to get it compiling/working on m68k Amiga again.
 
+Compiled with sas/c, no GCC needed.
+
 The relevant files for compiling are:
-libxad/portable/amiga/SMakeFile
-libxad/amiga/source/clients/SMakeFile
+"libxad/portable/amiga/SMakeFile"
+"libxad/amiga/source/clients/SMakeFile"
 
 See also "libxad/needed_assigns"
 
