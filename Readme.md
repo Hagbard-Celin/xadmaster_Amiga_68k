@@ -1,3 +1,5 @@
+As the binary download can be quite hard to find I'm putting the link here: [xadmasterV13m68kTestBuild.lha](https://github.com/Hagbard-Celin/xadmaster_Amiga_68k/releases/download/v13.0-Amiga-m68k-test_beta/xadmasterV13m68kTestBuild.lha)
+
 Firstly, I'm not the right person to maintain this. The mathematics of compression is way over my head.
 This version exists only because I of my personal need. And the fact that I would feel bad about myself if I sat on a working version, and did not share it.
 And my only criteria for success is that it compiles/runs, and does not fill my serial-log with muForce/PatchWork hits.
