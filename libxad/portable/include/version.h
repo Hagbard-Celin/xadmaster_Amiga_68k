@@ -25,7 +25,7 @@
 #define BETA
 #define XADMASTERVERSION   13
 #define XADMASTERREVISION  0
-#define DATETXT            "31.03.2003"
+#define DATETXT            "25.04.2025"
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

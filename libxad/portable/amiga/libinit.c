@@ -175,7 +175,7 @@ static const ULONG LibInitTable[4]; /* the prototype */
 /* The library loader looks for this marker in the memory
    the library code and data will occupy. It is responsible
    setting up the Library base data structure. */
-const struct Resident RomTag = {
+static const struct Resident RomTag = {
   RTC_MATCHWORD,                /* Marker value. */
   (struct Resident *)&RomTag,   /* This points back to itself. */
   (struct Resident *)&RomTag+1, /* This points behind this marker. */
