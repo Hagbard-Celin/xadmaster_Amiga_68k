@@ -40,7 +40,7 @@ FARLIB = LIB:scnb.lib
 #
 
 # *************
-DEF: AMPK ar bzip bzip2 CAB COP DiskDoubler DMS \
+DEF: AMPK ar bzip bzip2 CAB COP DImp DMS \
      HA id IFF-CDAF LhA LhF LZX MDC MS-TNEF MXM-SimpleArc \
      PackDev PackDir PackDisk RPM StuffIt Tar TR-DOS \
      UnrealUMX Wrapster xMash ZAP Zip Zoom
@@ -215,7 +215,7 @@ $(ODIR)DCS.o: DCS.c $(DEPCON)
 
 # ************* DImp
 
-$(XADIR)DImp: $(HEAD) $(ODIR)DImp.o
+$(ODIR)DImp: $(HEAD) $(ODIR)DImp.o
 	slink $(SLOPTS) $(ODIR)DImp.o TO $@ LIB $(FARLIB)
 
 $(ODIR)DImp.o: DImp.c $(DEPCON)
