@@ -96,10 +96,14 @@ ASM(BOOL) PAK_RecogData(REG(d0, ULONG size), REG(a0, STRPTR d), XADBASE) {
    * than that), we simply have to assume some maximum size for a
    * PAK file that would never be reached if the the MSB was an
    * ASCII character.
+   *
+   * The check for four zeroes and a 'X' was added to avoid false-
+   * positives from SoundTracker packed songs.
    */
-  return ((d[0]=='P' && d[1]=='A' && d[2]=='C' && d[3]=='K') &&
+  return (((d[0]=='P' && d[1]=='A' && d[2]=='C' && d[3]=='K') &&
           (dirsize & 0x3F)==0 && dirsize > 0 && diroff >= 12 &&
-          (dirsize + diroff) < (250*1024*1024) );
+          (dirsize + diroff) < (250*1024*1024) ) &&
+          !(d[4]==0 && d[5]==0 && d[8]==0 && d[9]==0 && d[11]=='X') );
 }
 
 #define ID_WAD  (0)
